@@ -51,9 +51,10 @@ function App() {
       // 4. TODO - Make Detections
       // e.g. const obj = await net.detect(video);
       // const webcam = await tf.data.webcam(video);
-      const img = await tf.browser.fromPixels(video);
+      
       while(true) {
         // Capture + classify video image
+        const img = await tf.browser.fromPixels(video);
         // const img = await webcam.capture();
         const result = await net.classify(img);
 
@@ -63,7 +64,7 @@ function App() {
 
 
         // Dispose tensor
-        // img.dispose();
+        img.dispose();
 
         // Wait for next animation frame
         await tf.nextFrame();
