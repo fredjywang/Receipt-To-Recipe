@@ -15,115 +15,44 @@ const Detect = () => {
   const canvasRef = useRef(null);
 
   // Initializing img state
-  const [img, setImg] = useState('');
+  const [img, setImg] = useState("");
   const [receiptData, setreceiptData] = useState([]);
 
   // Take a photo using webcam
-  const capture = React.useCallback(
-    () => {
-      let imgSrc = webcamRef.current.getScreenshot();
-      setImg(imgSrc);
-      getReceiptData(imgSrc);
-    },
-    [webcamRef]
-  );
-  
+  const capture = React.useCallback(() => {
+    let imgSrc = webcamRef.current.getScreenshot();
+    setImg(imgSrc);
+    getReceiptData(imgSrc);
+  }, [webcamRef]);
 
   // Call Taggun API
-  const getReceiptData = (img) => {
-    const TAGGUN_KEY = process.env.REACT_APP_TAGGUN_KEY;
-    console.log(TAGGUN_KEY);
+  const getReceiptData = (image) => {
     const base_url = "https://api.taggun.io/api/receipt/v1/verbose/encoded";
+    const data = {
+      image: image.slice(23, image.length - 1),
+      filename: "example.jpg",
+      contentType: "image/jpeg",
+      refresh: false,
+      incognito: false,
+      ipAddress: "32.4.2.223",
+    };
+    // Send a POST request
     axios
-      .post(
-        `${base_url}`,
-        {
-          headers: {
-            "Content-Type": null,
-            "apikey": TAGGUN_KEY
-          },
-          body: {
-            "body": img
-          }
-        }
-      )
+      .post(base_url, data, {
+        headers: {
+          accept: "application/json",
+          apikey: process.env.REACT_APP_TAGGUN_KEY,
+          "Content-Type": "application/json",
+        },
+      })
       .then((res) => {
-        console.log(res.data);
-        setreceiptData(res.data);
+        console.log(res);
+        setreceiptData(res);
       })
       .catch((err) => {
         console.log(err);
       });
-    }
-
-  // // Create states
-  // const [prediction, setPrediction] = useState("");
-  // const [probability, setProbability] = useState("");
-
-  // // // Main function
-  // // const runMobileNet = async () => {
-  // //   // 3. TODO - Load network
-  // //   const net = await tf_mobilenet.load();
-  // //   console.log("Successfully loaded model.");
-
-  // //   //  Loop and detect hands
-  // //   setInterval(() => {
-  // //     detect(net);
-  // //   }, 10);
-  // // };
-
-  // const detect = async (net) => {
-  //   // Check data is available
-  //   if (
-  //     typeof webcamRef.current !== "undefined" &&
-  //     webcamRef.current !== null &&
-  //     webcamRef.current.video.readyState === 4
-  //   ) {
-  //     // Get Video Properties
-  //     const video = webcamRef.current.video;
-  //     const videoWidth = webcamRef.current.video.videoWidth;
-  //     const videoHeight = webcamRef.current.video.videoHeight;
-
-  //     // Set video width
-  //     webcamRef.current.video.width = videoWidth;
-  //     webcamRef.current.video.height = videoHeight;
-
-  //     // Set canvas height and width
-  //     canvasRef.current.width = videoWidth;
-  //     canvasRef.current.height = videoHeight;
-
-  //     // 4. TODO - Make Detections
-  //     // e.g. const obj = await net.detect(video);
-  //     // const webcam = await tf.data.webcam(video);
-
-  //     while (true) {
-  //       const img = await tf.browser.fromPixels(video);
-  //       // Capture + classify video image
-  //       // const img = await webcam.capture();
-  //       const result = await net.classify(img);
-
-  //       // Set states
-  //       setPrediction(result[0].className);
-  //       setProbability(result[0].probability);
-
-  //       // Dispose tensor
-  //       img.dispose();
-
-  //       // Wait for next animation frame
-  //       await tf.nextFrame();
-  //     }
-
-  //     // Draw mesh
-  //     //const ctx = canvasRef.current.getContext("2d");
-
-  //     // 5. TODO - Update drawing utility
-  //     // drawSomething(obj, ctx)
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   runMobileNet();
-  // }, []);
+  };
 
   return (
     <div className='App'>
@@ -153,7 +82,6 @@ const Detect = () => {
             height: 480,
           }}
         />
-
         <canvas
           ref={canvasRef}
           style={{
@@ -170,14 +98,10 @@ const Detect = () => {
         />
       </header>
 
-      <button onClick={capture} className='positionInBottom'>Take a photo</button>
-      {img && (
-        <img 
-          src = {img}
-          alt = "this is me"
-        />
-      )}
-
+      <button onClick={capture} className='positionInBottom'>
+        Take a photo
+      </button>
+      {img && <img src={img} alt='this is me' />}
     </div>
   );
 };

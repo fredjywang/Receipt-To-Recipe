@@ -7,7 +7,7 @@ function App() {
   return (
     <div className='App'>
       <Detect />
-      <Recipe />
+      {/* <Recipe /> */}
     </div>
   );
 }
