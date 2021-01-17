@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+.positionInBottom {
+  position: 'absolute';
+  width : 50;
+  height : 50;
+  bottom : 35;
+}
