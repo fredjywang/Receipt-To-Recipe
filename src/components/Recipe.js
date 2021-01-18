@@ -5,7 +5,7 @@ import "../App.css";
 
 const Recipe = (props) => {
   const ingredientArray = props.ingredientArray;
-  const [recipes, setRecipes] = useState("");
+  const [recipes, setRecipes] = useState([]);
   useEffect(() => {
     console.log(process.env);
     getRecipes();
@@ -17,10 +17,10 @@ const Recipe = (props) => {
 
   function getRecipes() {
     const baseURL = "https://api.spoonacular.com/recipes/findByIngredients";
-    const ingredientString = "banan,+flour,+sugar";
+    const ingredientString = ingredientArray.join(",+");
     axios
       .get(
-        `${baseURL}?apiKey=${process.env.REACT_APP_API_KEY}&ingredients=${ingredientString}&number=2`,
+        `${baseURL}?apiKey=${process.env.REACT_APP_API_KEY}&ingredients=${ingredientString}`,
         {
           headers: {
             "Content-Type": null,
