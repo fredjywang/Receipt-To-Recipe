@@ -6,6 +6,7 @@ import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import Webcam from "react-webcam";
 import "../App.css";
+import Recipe from "./Recipe";
 // 2. TODO - Import drawing utility here
 // e.g. import { drawRect } from "./utilities";
 
@@ -16,7 +17,8 @@ const Detect = () => {
 
   // Initializing img state
   const [img, setImg] = useState("");
-  const [receiptData, setreceiptData] = useState([]);
+  const [showRecipe, setShowRecipe] = useState(false);
+  const [receiptData, setReceiptData] = useState([]);
 
   // Take a photo using webcam
   const capture = React.useCallback(() => {
@@ -46,8 +48,8 @@ const Detect = () => {
         },
       })
       .then((res) => {
-        console.log(res);
-        setreceiptData(res);
+        setReceiptData(res.data.amounts.map((item, index) => item.text));
+        setShowRecipe(true);
       })
       .catch((err) => {
         console.log(err);
@@ -102,6 +104,7 @@ const Detect = () => {
         Take a photo
       </button>
       {img && <img src={img} alt='this is me' />}
+      <>{showRecipe && <Recipe ingredientArray={receiptData} />}</>
     </div>
   );
 };
