@@ -1,14 +1,9 @@
 // Import dependencies
 import React, { useRef, useState, useEffect } from "react";
-// import * as tf from "@tensorflow/tfjs";
-// // 1. TODO - Import required model here
-// import * as tf_mobilenet from "@tensorflow-models/mobilenet";
 import axios from "axios";
 import Webcam from "react-webcam";
 import "../App.css";
 import Recipe from "./Recipe";
-// 2. TODO - Import drawing utility here
-// e.g. import { drawRect } from "./utilities";
 
 const Detect = () => {
   // Creating references
